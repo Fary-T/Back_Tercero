@@ -6,8 +6,6 @@ const db = require("../../db/connection");
 router.post("/", (req, res) => {
   const { correo, contrasenia } = req.body;
 
-  console.log(correo, " // ", contrasenia);
-
   if (!correo || !contrasenia) {
     return res
       .status(400)
