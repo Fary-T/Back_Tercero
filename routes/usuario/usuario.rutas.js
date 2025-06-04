@@ -104,7 +104,7 @@ router.put('/editar/:id', (req, res) => {
 
     res.json({ mensaje: 'Usuario actualizado exitosamente' });
   });
-});
+
 module.exports = router;
 
 
