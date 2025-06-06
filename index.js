@@ -7,7 +7,7 @@ const PORT = 3030;
 const usuarioRutas = require('./routes/usuario/usuario.rutas');
 const loginRutas = require('./routes/login/login.rutas');
 const seguroRutas = require('./routes/seguro/seguro.rutas');
-
+const usuario_seguroRutas = require('./routes/usuario_seguro/usuario_seguro.rutas');
 
 app.use(cors({
     origin: 'http://localhost:3000',
@@ -21,6 +21,7 @@ app.use(express.json());
 app.use('/usuario', usuarioRutas); //http://localhost:3030/usuario ->raiz
 app.use('/home', loginRutas); //http://localhost:3030/home ->raiz
 app.use('/seguro', seguroRutas); //http://localhost:3030/seguro ->raiz
+app.use('/usuario_seguro',usuarioRutas ); //http://localhost:3030/seguro ->raiz
 //app.use('/bodega', bodegaRutas); //http://localhost:3030/seguro ->raiz
 
 //raiz
