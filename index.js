@@ -21,7 +21,7 @@ app.use(express.json());
 app.use('/usuario', usuarioRutas); //http://localhost:3030/usuario ->raiz
 app.use('/home', loginRutas); //http://localhost:3030/home ->raiz
 app.use('/seguro', seguroRutas); //http://localhost:3030/seguro ->raiz
-app.use('/usuario_seguro',usuarioRutas ); //http://localhost:3030/seguro ->raiz
+app.use('/usuario_seguro',usuario_seguroRutas ); //http://localhost:3030/seguro ->raiz
 //app.use('/bodega', bodegaRutas); //http://localhost:3030/seguro ->raiz
 
 //raiz

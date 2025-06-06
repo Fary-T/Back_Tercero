@@ -15,42 +15,22 @@ router.post('/', (req, res) => {
 });
 //http://localhost:3030/usuario_seguro/agregar
 router.post('/agregar', (req, res) => {
-    const { id_usuario_per, id_seguro_per, fecha_contrato, fecha_fin, estado, estado_pago } = req.body;
+    const {id_usuario_per,id_seguro_per,fecha_contrato,fecha_fin,estado,estado_pago} = req.body;
+
+    const query = `
+        INSERT INTO seguros.usuario_seguro 
+        (id_usuario_per, id_seguro_per, fecha_contrato, fecha_fin, estado, estado_pago)
+        VALUES (?, ?, ?, ?, ?, ?)
+    `;
     
-    // Validación de campos requeridos
-    if (!id_usuario_per || !id_seguro_per || !fecha_contrato || !fecha_fin) {
-        return res.status(400).json({ 
-            error: 'Faltan datos requeridos',
-            received: { id_usuario_per, id_seguro_per, fecha_contrato, fecha_fin, estado, estado_pago }
-        });
-    }
-    
-    // Establecer valores por defecto si no se proporcionan
-    const estadoFinal = estado !== undefined ? estado : 1; // 1 = activo por defecto
-    const estadoPagoFinal = estado_pago !== undefined ? estado_pago : 0; // 0 = pendiente por defecto
-    
-    // Consulta SQL corregida para insertar en la tabla correspondiente
-    const sql = `INSERT INTO contratos_seguro (id_usuario_per, id_seguro_per, fecha_contrato, fecha_fin, estado, estado_pago) 
-                 VALUES (?, ?, ?, ?, ?, ?)`;
-    
-    db.query(sql, [id_usuario_per, id_seguro_per, fecha_contrato, fecha_fin, estadoFinal, estadoPagoFinal], (err, resultado) => {
+    const valores = [id_usuario_per,id_seguro_per,fecha_contrato,fecha_fin,estado,estado_pago];
+    console.log(valores);
+    db.query(query, valores, (err, resultado) => {
         if (err) {
-            console.error('Error al insertar contrato de seguro:', err);
-            res.status(500).json({ error: 'Error al agregar el contrato de seguro' });
+            console.error('Error al insertar usuario_seguro:', err);
+            res.status(500).json({ error: 'Error al agregar el registro' });
         } else {
-            res.status(201).json({ 
-                mensaje: 'Contrato de seguro agregado exitosamente', 
-                id: resultado.insertId,
-                contrato: {
-                    id: resultado.insertId,
-                    id_usuario_per,
-                    id_seguro_per,
-                    fecha_contrato,
-                    fecha_fin,
-                    estado: estadoFinal,
-                    estado_pago: estadoPagoFinal
-                }
-            });
+            res.status(201).json({ mensaje: 'Registro agregado correctamente', id_insertado: resultado.insertId });
         }
     });
 });
