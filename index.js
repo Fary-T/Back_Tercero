@@ -30,8 +30,6 @@ app.get("/", (req, res) => {
     res.send("probando la api desde la web")
 });
 
-
-
 app.listen(PORT, () => {
     console.log(`Aplicacion de express esta corriendo en el puerto http://localhost:${PORT}`);
 });
