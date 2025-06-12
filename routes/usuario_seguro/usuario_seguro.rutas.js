@@ -91,7 +91,7 @@ router.put('/editar/:id', (req, res) => {
         }
     });
 });
-
+//http://localhost:3030/usuario_seguro/eliminar/:id
 router.delete('/eliminar/:id', (req, res) => {
     const id = req.params.id;
 
@@ -110,3 +110,4 @@ router.delete('/eliminar/:id', (req, res) => {
 });
 
 module.exports = router;
+//

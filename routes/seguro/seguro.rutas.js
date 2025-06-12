@@ -99,3 +99,4 @@ router.delete('/eliminar/:id', (req, res) => {
 });
 
 module.exports = router;
+//seguro
