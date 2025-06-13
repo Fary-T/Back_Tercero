@@ -18,8 +18,14 @@ const upload = multer({ dest: "uploads/" });
 // http://localhost:3030/documentos/
 router.post("/", upload.single("archivo"), async (req, res) => {
   const file = req.file; //s3
-  const { id, cedula, nombre_documento,id_usuario_seguro_per,id_requisito_per, archivo } = req.body; //s3
-  console.log(archivo);
+  const id = req.body.id;
+  const cedula = req.body.cedula;
+  const nombre_documento = req.body.nombre_documento;
+  const id_usuario_seguro_per = req.body.id_usuario_seguro_per;
+  const id_requisito_per = req.body.id_requisito_per;
+  const archivo = req.body.archivo;
+  console.log(id);
+  console.log("hola");
   try {
     console.log("Archivo recibido:", file);
     const key =
