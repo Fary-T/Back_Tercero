@@ -76,12 +76,10 @@ router.get("/descargar", async (req, res) => {
     archivoStream.pipe(res);
   } catch (error) {
     console.error("Error al descargar archivo:", error);
-    res
-      .status(500)
-      .json({
-        error: "No se pudo descargar el archivo",
-        detalle: error.message,
-      });
+    res.status(500).json({
+      error: "No se pudo descargar el archivo",
+      detalle: error.message,
+    });
   }
 });
 
@@ -100,12 +98,10 @@ router.delete("/eliminar", async (req, res) => {
     res.json({ mensaje: `Archivo eliminado correctamente: ${key}` });
   } catch (error) {
     console.error("Error al eliminar archivo:", error);
-    res
-      .status(500)
-      .json({
-        error: "No se pudo eliminar el archivo",
-        detalle: error.message,
-      });
+    res.status(500).json({
+      error: "No se pudo eliminar el archivo",
+      detalle: error.message,
+    });
   }
 });
 
