@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../db/connection");
 
+
+
 //http://localhost:3030/login/  ->internamente mandare un correo y una contraseña
 router.post("/", (req, res) => {
   const { correo, contrasenia } = req.body;
