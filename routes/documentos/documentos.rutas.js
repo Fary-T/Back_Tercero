@@ -18,14 +18,15 @@ const upload = multer({ dest: "uploads/" });
 // http://localhost:3030/documentos/
 router.post("/", upload.single("archivo"), async (req, res) => {
   const file = req.file; //s3
-  const { id, cedula, nombre_documento } = req.body; //s3
+  const { id, cedula, nombre_documento,id_usuario_seguro_per,id_requisito_per, archivo } = req.body; //s3
+  console.log(archivo);
   try {
     console.log("Archivo recibido:", file);
     const key =
       id + "/" + cedula + "/" + nombre_documento + "/" + file.originalname; // Incluir/Archivo. 3/1155155155/archivo.pdf
     await subirArchivo(file.path, key);
-    const query = `INSERT INTO documentos (id_usuario, cedula, nombre_documento, key_s3) VALUES (?, ?, ?, ?)`;
-    db.query(query, [id, cedula, nombre_documento, key], (err) => {
+    const query = `INSERT INTO requisito_seguro (id_usuario_seguro_per, id_requisito_per, informacion) VALUES (?, ?, ?)`;
+    db.query(query, [id_usuario_seguro_per,id_requisito_per,key], (err) => {
       if (err) {
         console.error("Error al guardar en BD:", err);
         return res.status(500).json({ error: "Error guardando metadatos" });
