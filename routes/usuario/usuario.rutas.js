@@ -17,8 +17,8 @@ router.post('/', (req, res) => {
 // http://localhost:3030/usuario/agregar
 router.post('/agregar', (req, res) => {
   const { correo, username, password, nombre, apellido, tipo, activo, cedula, telefono, rol } = req.body;
-  console.log(correo, username, password, nombre, apellido, tipo, activo, cedula, telefono, rol );
-  if (!correo || !username || !nombre || !apellido || !cedula || !telefono || !rol) {
+
+  if (!correo || !username || !password || !nombre || !apellido || !cedula || !telefono || !rol) {
     return res.status(400).json({ error: 'Faltan datos requeridos' });
   }
   console.log("Este es el tipo:",tipo);
@@ -81,7 +81,34 @@ router.put('/editar/:id', (req, res) => {
     res.json({ mensaje: 'Usuario actualizado exitosamente' });
   });
 });
+// http://localhost:3030/usuario2/editar/:id
+router.put('/editar2/:id', (req, res) => {
+  const id = req.params.id;
+  const { correo, nombre, apellido, tipo, activo, cedula, telefono, rol } = req.body;
 
+  if (!correo || !nombre || !apellido || !activo || !cedula || !telefono || !rol) {
+    return res.status(400).json({ error: 'Faltan datos requeridos' });
+  }
+
+  const sql = `
+    UPDATE usuario
+    SET correo = ?, nombre = ?, apellido = ?, tipo = ?, activo = ?, cedula = ?, telefono = ?, rol = ?
+    WHERE id_usuario = ?
+  `;
+
+  db.query(sql, [correo, nombre, apellido, tipo, activo, cedula, telefono, rol, id], (err, resultado) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Error al actualizar el usuario' });
+    }
+
+    if (resultado.affectedRows === 0) {
+      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+    }
+
+    res.json({ mensaje: 'Usuario actualizado exitosamente' });
+  });
+});
 module.exports = router;
 
 /*
