@@ -8,6 +8,7 @@ const usuarioRutas = require('./routes/usuario/usuario.rutas');
 const loginRutas = require('./routes/login/login.rutas');
 const seguroRutas = require('./routes/seguro/seguro.rutas');
 const usuario_seguroRutas = require('./routes/usuario_seguro/usuario_seguro.rutas');
+const documentosRutas = require('./routes/documentos/documentos.rutas');;
 
 app.use(cors({
     origin: 'http://localhost:3000',

@@ -18,20 +18,12 @@ router.post('/', (req, res) => {
 router.post('/agregar', (req, res) => {
   const { correo, username, password, nombre, apellido, tipo, activo, cedula, telefono, rol } = req.body;
 
-<<<<<<< Updated upstream
-  if (!correo || !username || !password || !nombre || !apellido || !cedula || !telefono || !rol) {
-=======
   if (!correo || !username || !password || !nombre || !apellido  || !activo || !cedula || !telefono || !rol) {
->>>>>>> Stashed changes
     return res.status(400).json({ error: 'Faltan datos requeridos' });
   }
   console.log("Este es el tipo:",tipo);
   const sql = 'INSERT INTO usuario (correo, username, password, nombre, apellido, tipo, activo, cedula, telefono, rol) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-<<<<<<< Updated upstream
-  db.query(sql, [correo, username, cedula, nombre, apellido, tipo, activo, cedula, telefono, rol], (err, resultado) => {
-=======
   db.query(sql, [correo, username, password, nombre, apellido, tipo, activo, cedula, telefono, rol], (err, resultado) => {
->>>>>>> Stashed changes
     if (err) {
       console.error(err);
       res.status(500).json({ error: 'Error al agregar el usuario' });
@@ -59,8 +51,6 @@ router.delete('/eliminar/:id', (req, res) => {
 
     res.json({ mensaje: 'Usuario eliminado exitosamente' });
   });
-<<<<<<< Updated upstream
-=======
 });
 
 // http://localhost:3030/usuario/editar/:id
@@ -90,7 +80,6 @@ router.put('/editar/:id', (req, res) => {
 
     res.json({ mensaje: 'Usuario actualizado exitosamente' });
   });
->>>>>>> Stashed changes
 });
 
 // http://localhost:3030/usuario/editar/:id

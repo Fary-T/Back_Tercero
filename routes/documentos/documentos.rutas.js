@@ -18,6 +18,7 @@ const eliminarArchivo = require('../../s3/eliminarArchivo');
 // http://localhost:3030/documentos/
 router.post('/', upload.single('archivo'), async (req, res) => {
     const file = req.file; //s3
+    const { id, cedula, nombre_documento } = req.body; //s3
     try {
         console.log("Archivo recibido:", file);
         const key = id + "/" + cedula + "/" + nombre_documento + "/" + file.originalname; // Incluir/Archivo. 3/1155155155/archivo.pdf
