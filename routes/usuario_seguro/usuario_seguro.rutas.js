@@ -109,4 +109,31 @@ router.delete('/eliminar/:id', (req, res) => {
     });
 });
 
+const nodemailer = require('nodemailer');
+router.post('/mensaje/:correo', async (req, res) => {
+    const correo = req.params.correo;
+    const password = req.body.password;
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'ed6147266@gmail.com',
+            pass: 'mvwj rmfm clvn aekn' 
+        }
+    });
+
+    async function main() {
+        const mensaje = {
+            from: 'ed6147266@gmail.com',
+            to: correo, 
+            subject: 'Contraseña Temporal',
+            text: `Tu contraseña es: ${password}`
+        };
+
+        const info = await transporter.sendMail(mensaje);
+        console.log('Correo enviado:', info.response);
+    }
+
+    main().catch(console.error);
+
+});
 module.exports = router;
