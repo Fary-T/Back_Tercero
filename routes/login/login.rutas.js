@@ -13,9 +13,6 @@ router.post("/", (req, res) => {
       .status(400)
       .json({ mensaje: "Correo y contraseña son obligatorios" });
   }
-
-  //const query = "CALL login(?, ?)";
-  //const query = "CALL login(correo, contrasenia)";
   const query = "select * from usuario where correo = ? AND password=?";
 
   db.query(query, [correo, contrasenia], (err, results) => {

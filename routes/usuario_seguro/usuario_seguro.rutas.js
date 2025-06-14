@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../../db/connection');
+const nodemailer = require('nodemailer');
+
 
 //http://localhost:3030/usuario_seguro/
 router.post('/', (req, res) => {
-    db.query('SELECT * FROM seguros.usuario_seguro', (err, resultado) => {
+    db.query('SELECT * FROM usuario_seguro', (err, resultado) => {
         if (err) {
             console.error(err);
             res.status(500).json({ error: 'Error al consultar los usuarios' });
@@ -18,7 +20,7 @@ router.post('/agregar', (req, res) => {
     const {id_usuario_per,id_seguro_per,fecha_contrato,fecha_fin,estado,estado_pago} = req.body;
 
     const query = `
-        INSERT INTO seguros.usuario_seguro 
+        INSERT INTO usuario_seguro 
         (id_usuario_per, id_seguro_per, fecha_contrato, fecha_fin, estado, estado_pago)
         VALUES (?, ?, ?, ?, ?, ?)
     `;
@@ -67,7 +69,7 @@ router.put('/editar/:id', (req, res) => {
     }
 
     const sql = `
-        UPDATE seguros.usuario_seguro 
+        UPDATE usuario_seguro 
         SET id_usuario_per = ?, id_seguro_per = ?, fecha_contrato = ?, fecha_fin = ?, estado = ?, estado_pago = ?
         WHERE id_usuario_seguro = ?
     `;
@@ -95,7 +97,7 @@ router.put('/editar/:id', (req, res) => {
 router.delete('/eliminar/:id', (req, res) => {
     const id = req.params.id;
 
-    const sql = 'DELETE FROM seguros.usuario_seguro WHERE id_usuario_seguro = ?';
+    const sql = 'DELETE FROM usuario_seguro WHERE id_usuario_seguro = ?';
 
     db.query(sql, [id], (err, resultado) => {
         if (err) {
@@ -109,7 +111,6 @@ router.delete('/eliminar/:id', (req, res) => {
     });
 });
 
-const nodemailer = require('nodemailer');
 router.post('/mensaje/:correo', async (req, res) => {
     const correo = req.params.correo;
     const password = req.body.password;

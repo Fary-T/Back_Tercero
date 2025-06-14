@@ -12,7 +12,6 @@ async function listarArchivos  ()  {
   const comando = new ListObjectsV2Command(params);
   const resultado = await s3.send(comando);
 
-  // Solo los nombres de archivo
   return resultado.Contents.map(item => ({
     nombre: item.Key,
     tamaño: item.Size,

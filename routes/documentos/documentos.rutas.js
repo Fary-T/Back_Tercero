@@ -18,26 +18,36 @@ const upload = multer({ dest: "uploads/" });
 // http://localhost:3030/documentos/
 router.post("/", upload.single("archivo"), async (req, res) => {
   const file = req.file; //s3
-  const id = req.body.id;
-  const cedula = req.body.cedula;
-  const nombre_documento = req.body.nombre_documento;
-  const id_usuario_seguro_per = req.body.id_usuario_seguro_per;
-  const id_requisito_per = req.body.id_requisito_per;
-  const archivo = req.body.archivo;
-  console.log(id);
-  console.log("hola");
+  const { id, cedula, nombre_documento, id_requisito_per, id_seguro_per } = req.body;
+
+
   try {
     console.log("Archivo recibido:", file);
     const key =
-      id + "/" + cedula + "/" + nombre_documento + "/" + file.originalname; // Incluir/Archivo. 3/1155155155/archivo.pdf
-    await subirArchivo(file.path, key);
-    const query = `INSERT INTO requisito_seguro (id_usuario_seguro_per, id_requisito_per, informacion) VALUES (?, ?, ?)`;
-    db.query(query, [id_usuario_seguro_per,id_requisito_per,key], (err) => {
+      id + "/" + cedula + "/" + nombre_documento + "/" + file.originalname;
+    
+
+    const queryConsulta = `SELECT id_usuario_seguro FROM usuario_seguro WHERE id_usuario_per = ? AND id_seguro_per = ?`;
+    db.query(queryConsulta, [id, id_seguro_per], (err, result) => {
       if (err) {
-        console.error("Error al guardar en BD:", err);
-        return res.status(500).json({ error: "Error guardando metadatos" });
+        console.log("Ocurrio un error en la consulta: ", err);
+        return res.status(500).json({ err: "Error al consultar id_usuario_seguro" })
       }
-    });
+      const resultado = result[0].id_usuario_seguro;
+      console.log("id_usuario_seguro: ",resultado);
+
+      const query = `INSERT INTO requisito_seguro (id_usuario_seguro_per, id_requisito_per, informacio, validado) VALUES (?, ?, ?, 0)`;
+      db.query(query, [resultado, id_requisito_per, key], (err) => {
+        if (err) {
+          console.error("Error al guardar en BD:", err);
+          return res.status(500).json({ error: "Error guardando metadatos" });
+        }
+      });
+    })
+    console.log("Antes de subir archivo a aws");
+    //await subirArchivo(file.path, key);
+    res.status(200).json({estado: "OK"});
+
   } catch (err) {
     console.error("Error detallado al subir archivo:", err);
     res
@@ -53,7 +63,7 @@ router.get("/lista", async (req, res) => {
 
     const archivosConKey = archivos.map((archivo) => ({
       ...archivo,
-      key: archivo.Key, // clave de S3 como en el primer ejemplo
+      key: archivo.Key, // clave de S3 como en el primer ejemplo ->supongo que aqui estas buscando llamar al archivo.nombre
     }));
 
     res.json(archivosConKey);
