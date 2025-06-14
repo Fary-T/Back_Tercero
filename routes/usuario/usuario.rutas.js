@@ -18,7 +18,7 @@ router.post('/', (req, res) => {
 router.post('/agregar', (req, res) => {
   const { correo, username, password, nombre, apellido, tipo, activo, cedula, telefono, rol } = req.body;
 
-  if (!correo || !username || !password || !nombre || !apellido  || !activo || !cedula || !telefono || !rol) {
+  if (!correo || !username || !password || !nombre || !apellido || !cedula || !telefono || !rol) {
     return res.status(400).json({ error: 'Faltan datos requeridos' });
   }
   console.log("Este es el tipo:",tipo);

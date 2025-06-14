@@ -5,7 +5,7 @@ const nodemailer = require('nodemailer');
 
 
 //http://localhost:3030/usuario_seguro/
-router.post('/', (req, res) => {
+router.post('/', (req, res) => { //debe ser por metodo get
     db.query('SELECT * FROM usuario_seguro', (err, resultado) => {
         if (err) {
             console.error(err);
