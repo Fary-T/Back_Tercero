@@ -17,7 +17,7 @@ app.use(morgan('dev')); // -> permite visualizar las peticiones y los estados de
 app.use(helmet());      // -> brinda seguridad en los headers y metadata
 
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: process.env.RUTA,
     credentials: true 
 }));
 
