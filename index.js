@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const PORT = 3030;
-
+require('dotenv').config();
 
 const usuarioRutas = require('./routes/usuario/usuario.rutas');
 const loginRutas = require('./routes/login/login.rutas');
