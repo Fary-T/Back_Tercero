@@ -10,6 +10,7 @@ const seguroRutas = require('./routes/seguro/seguro.rutas');
 const usuario_seguroRutas = require('./routes/usuario_seguro/usuario_seguro.rutas');
 const documentosRutas = require('./routes/documentos/documentos.rutas');
 const requisitosRutas = require('./routes/requisitos/requisitos.rutas');
+const planes = require('./routes/planes/planes')
 
 const morgan = require('morgan');
 const helmet = require('helmet');
@@ -32,6 +33,7 @@ app.use('/seguro', seguroRutas); //http://localhost:3030/seguro ->raiz
 app.use('/usuario_seguro',usuario_seguroRutas ); //http://localhost:3030/seguro ->raiz
 app.use('/documentos',documentosRutas ); //http://localhost:3030/documentos ->raiz
 app.use('/requisitos',requisitosRutas ); //http://localhost:3030/requisitos ->raiz
+app.use('/planes',planes);
 //app.use('/bodega', bodegaRutas); //http://localhost:3030/seguro ->raiz
 
 
