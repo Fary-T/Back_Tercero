@@ -17,24 +17,27 @@ const upload = multer({ dest: "uploads/" });
 
 // http://localhost:3030/documentos/
 router.post("/", upload.single("archivo"), async (req, res) => {
-  const file = req.file; //s3
+  const file = req.file;
   const { id, cedula, nombre_documento, id_requisito_per, id_seguro_per } = req.body;
 
-
   try {
-    console.log("Archivo recibido:", file);
-    const key =
-      id + "/" + cedula + "/" + nombre_documento + "/" + file.originalname;
-    
+    if (!file) {
+      return res.status(400).json({ error: "No se recibió ningún archivo" });
+    }
+
+    const key = id + "/" + cedula + "/" + nombre_documento + "/" + file.originalname;
 
     const queryConsulta = `SELECT id_usuario_seguro FROM usuario_seguro WHERE id_usuario_per = ? AND id_seguro_per = ?`;
     db.query(queryConsulta, [id, id_seguro_per], (err, result) => {
       if (err) {
-        console.log("Ocurrio un error en la consulta: ", err);
-        return res.status(500).json({ err: "Error al consultar id_usuario_seguro" })
+        console.log("Ocurrió un error en la consulta: ", err);
+        return res.status(500).json({ error: "Error al consultar id_usuario_seguro" });
+      }
+      if (!result || result.length === 0) {
+        return res.status(404).json({ error: "No se encontró usuario_seguro" });
       }
       const resultado = result[0].id_usuario_seguro;
-      console.log("id_usuario_seguro: ",resultado);
+      console.log("id_usuario_seguro: ", resultado);
 
       const query = `INSERT INTO requisito_seguro (id_usuario_seguro_per, id_requisito_per, informacio, validado) VALUES (?, ?, ?, 0)`;
       db.query(query, [resultado, id_requisito_per, key], (err) => {
@@ -42,17 +45,16 @@ router.post("/", upload.single("archivo"), async (req, res) => {
           console.error("Error al guardar en BD:", err);
           return res.status(500).json({ error: "Error guardando metadatos" });
         }
-      });
-    })
-    console.log("Antes de subir archivo a aws");
-    //await subirArchivo(file.path, key);
-    res.status(200).json({estado: "OK"});
+        // Aquí puedes subir el archivo a S3 si lo necesitas
+        // await subirArchivo(file.path, key);
 
+        // Solo aquí se envía la respuesta
+        res.status(200).json({ estado: "OK" });
+      });
+    });
   } catch (err) {
     console.error("Error detallado al subir archivo:", err);
-    res
-      .status(500)
-      .json({ error: "Error al subir el archivo", detalle: err.message });
+    res.status(500).json({ error: "Error al subir el archivo", detalle: err.message });
   }
 });
 
