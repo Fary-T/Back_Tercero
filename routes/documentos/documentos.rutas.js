@@ -20,7 +20,6 @@ router.post("/", upload.single("archivo"), async (req, res) => {
   const file = req.file; //s3
   const { id, cedula, nombre_documento, id_requisito_per, id_seguro_per } = req.body;
 
-
   try {
     console.log("Archivo recibido:", file);
     const key =
@@ -44,6 +43,36 @@ router.post("/", upload.single("archivo"), async (req, res) => {
         }
       });
     })
+    console.log("Antes de subir archivo a aws");
+    //await subirArchivo(file.path, key);
+    res.status(200).json({estado: "OK"});
+
+  } catch (err) {
+    console.error("Error detallado al subir archivo:", err);
+    res
+      .status(500)
+      .json({ error: "Error al subir el archivo", detalle: err.message });
+  }
+});
+
+// http://localhost:3030/documentos/formulario
+router.post("/formulario", upload.single("archivo"), async (req, res) => {
+  const file = req.file; //s3
+  const { id_usuario_per, cedula, nombre_documento, id_seguro_per } = req.body;
+
+  try {
+    console.log("Archivo recibido:", file);
+    const key =
+      id_usuario_per + "/" + cedula + "/" + nombre_documento + "/" + file.originalname;
+    
+      const query = `INSERT INTO usuario_seguro (id_usuario_per, id_seguro_per , fecha_contrato, estado, estado_pago, formulario) VALUES (?, ?, CURRENT_DATE, 0, 0, ?)`;
+      db.query(query, [id_usuario_per, id_seguro_per, key], (err) => {
+        if (err) {
+          console.error("Error al guardar en BD:", err);
+          return res.status(500).json({ error: "Error guardando metadatos" });
+        }
+      });
+
     console.log("Antes de subir archivo a aws");
     //await subirArchivo(file.path, key);
     res.status(200).json({estado: "OK"});
