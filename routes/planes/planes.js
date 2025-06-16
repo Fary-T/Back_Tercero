@@ -3,7 +3,6 @@ const router = express.Router();
 const db = require('../../db/connection'); 
 
 // Traer todos los seguros
-//h
 router.get('/seguros', (req, res) => {
     db.query('select s.precio, s.nombre, s.descripcion, b.detalle, s.id_seguro from seguro s, beneficio b, seguro_beneficio sb where s.id_seguro = sb.id_seguro_per and sb.id_beneficio_per = b.id_beneficio', (err, seguros) => {
         if (err) {
