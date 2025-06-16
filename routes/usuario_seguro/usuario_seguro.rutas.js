@@ -111,6 +111,7 @@ router.delete('/eliminar/:id', (req, res) => {
     });
 });
 
+// http://localhost:3030/usuario_seguro/mensaje/:correo
 router.post('/mensaje/:correo', async (req, res) => {
     const correo = req.params.correo;
     const password = req.body.password;
@@ -138,7 +139,7 @@ router.post('/mensaje/:correo', async (req, res) => {
 
 });
 
-//modificar el estado
+// http://localhost:3030/usuario_seguro/modificar
 router.post('/modificar', (req, res) => {
     db.query('select us.id_usuario_seguro, us.estado from usuario_seguro us', (err, seguros) => {
         if (err) {
