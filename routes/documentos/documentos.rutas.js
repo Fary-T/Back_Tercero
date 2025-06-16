@@ -64,13 +64,13 @@ router.post("/formulario", upload.single("archivo"), async (req, res) => {
   const { id_usuario_per, cedula, nombre_documento, id_seguro_per } = req.body;
 
   try {
-    console.log("Archivo recibido:", file);
+
     const key =
       id_usuario_per + "/" + cedula + "/" + nombre_documento + "/" + file.originalname;
-    
       const query = `INSERT INTO usuario_seguro (id_usuario_per, id_seguro_per , fecha_contrato, estado, estado_pago, formulario) VALUES (?, ?, CURRENT_DATE, 0, 0, ?)`;
       db.query(query, [id_usuario_per, id_seguro_per, key], (err) => {
         if (err) {
+          console.log('Insertando en la BD con:', id_usuario_per, id_seguro_per, key);
           console.error("Error al guardar en BD:", err);
           return res.status(500).json({ error: "Error guardando metadatos" });
         }
