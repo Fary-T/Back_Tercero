@@ -15,7 +15,7 @@ router.get('/:id_usuario', (req, res) => {
     const query = `
             SELECT 
                 us.id_usuario_seguro,
-                sr.id_seguro_requisito,
+                r.id_requisito, 
                 s.id_seguro,
                 s.nombre AS nombre_seguro,
                 s.precio,
