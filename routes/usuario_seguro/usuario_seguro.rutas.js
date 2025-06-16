@@ -138,4 +138,16 @@ router.post('/mensaje/:correo', async (req, res) => {
 
 });
 
+//modificar el estado
+router.post('/modificar', (req, res) => {
+    db.query('select us.id_usuario_seguro, us.estado from usuario_seguro us', (err, seguros) => {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ error: 'Error al obtener datos' });
+        } else {
+            res.json(seguros);
+        }
+    });
+});
+
 module.exports = router;
