@@ -53,7 +53,7 @@ router.post("/formulario", upload.single("archivo"), async (req, res) => {
   const { id_usuario_per, cedula, nombre_documento, id_seguro_per } = req.body;
 
   try {
-    console.log("Archivo recibido:", file);
+
     const key =
       id_usuario_per + "/" + cedula + "/" + nombre_documento + "/" + file.originalname;
 
