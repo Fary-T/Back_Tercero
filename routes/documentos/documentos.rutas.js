@@ -36,7 +36,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
       }
 
       console.log("Antes de subir archivo a aws");
-      // await subirArchivo(file.path, key);
+      await subirArchivo(file.path, key);
       res.status(200).json({ estado: "OK" });
     });
   } catch (err) {
