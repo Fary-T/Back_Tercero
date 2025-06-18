@@ -9,23 +9,23 @@ const path = require("path");
 const upload = multer({ dest: "uploads/" });
 
 //s3 listar
-//const listarArchivos = require('../../s3/listarArchivos');
+const listarArchivos = require('../../s3/listarArchivos');
 //s3 descarga
-//const obtenerUrlArchivo = require('../../s3/obtenerUrl');
+const obtenerUrlArchivo = require('../../s3/obtenerUrl');
 //s3 eliminar
-//const eliminarArchivo = require('../../s3/eliminarArchivo');
+const eliminarArchivo = require('../../s3/eliminarArchivo');
 
 // http://localhost:3030/documentos/
 router.post("/", upload.single("archivo"), async (req, res) => {
   const file = req.file;
-  const { id_usuario_seguro_per, cedula, nombre_documento, id_requisito_per } = req.body;
+  const { id_usuario_seguro_per, cedula, nombre_documento, id_requisito_per, id_usuario } = req.body;
 
   try {
     if (!file) {
       return res.status(400).json({ error: "No se recibió ningún archivo" });
     }
 
-    const key = id_usuario_seguro_per + "/" + cedula + "/" + nombre_documento + "/" + file.originalname;
+    const key = id_usuario + "/" + cedula + "/" + nombre_documento + "/" + file.originalname;
 
     const query = `INSERT INTO requisito_seguro (id_usuario_seguro_per, id_requisito_per, informacio, validado) VALUES (?, ?, ?, 0)`;
 
@@ -105,7 +105,7 @@ router.get("/descargar", async (req, res) => {
   }
 
   try {
-    const archivoStream = await obtenerArchivoDesdeS3(key); // función que devuelve un stream desde S3
+    const archivoStream = await obtenerUrlArchivo(key); // función que devuelve un stream desde S3
 
     const nombreArchivo = key.split("/").pop();
     res.attachment(nombreArchivo);
@@ -132,7 +132,7 @@ router.delete("/eliminar", async (req, res) => {
   }
 
   try {
-    await eliminarArchivoDesdeS3(key);
+    await eliminarArchivo(key);
     res.json({ mensaje: `Archivo eliminado correctamente: ${key}` });
   } catch (error) {
     console.error("Error al eliminar archivo:", error);
