@@ -143,5 +143,4 @@ router.delete("/eliminar", async (req, res) => {
   }
 });
 
-
 module.exports = router;
