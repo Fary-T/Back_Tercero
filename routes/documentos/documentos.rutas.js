@@ -182,5 +182,50 @@ router.post("/reembolsos", upload.any(), async (req, res) => {
   }
 });
 
+// http://localhost:3030/documentos/comprobante
+router.post("/comprobante", upload.single("archivo"), async (req, res) => {
+  const file = req.file;
+  const { id_usuario_seguro_per, fecha_pago, id_usuario, precio } = req.body;
+
+  try {
+    // Validaciones
+    if (!file) {
+      return res.status(400).json({ error: "No se recibió ningún archivo" });
+    }
+
+    if (!id_usuario || !id_usuario_seguro_per || !fecha_pago || !precio) {
+      return res.status(400).json({ error: "Faltan datos requeridos" });
+    }
+
+    const key = `${id_usuario}/${fecha_pago}/${file.originalname}`;
+
+    const query = `
+      INSERT INTO pago_seguro (id_usuario_seguro_per, fecha_pago, cantidad, comprobante_pago)
+      VALUES (?, ?, ?, ?)
+    `;
+
+    db.query(query, [id_usuario_seguro_per, fecha_pago, precio, key], async (err) => {
+      if (err) {
+        console.error("Error al guardar en BD:", err);
+        return res.status(500).json({ error: "Error guardando en la base de datos" });
+      }
+
+      console.log("Subiendo comprobante a S3...");
+      await subirArchivo(file.path, key);
+
+      // Eliminar archivo temporal local
+      fs.unlink(file.path, (err) => {
+        if (err) console.warn("No se pudo eliminar el archivo temporal:", err);
+      });
+
+      res.status(200).json({ estado: "OK", mensaje: "Comprobante subido correctamente" });
+    });
+
+  } catch (err) {
+    console.error("Error en /comprobante:", err);
+    res.status(500).json({ error: "Error al subir el comprobante", detalle: err.message });
+  }
+});
+
 
 module.exports = router;
