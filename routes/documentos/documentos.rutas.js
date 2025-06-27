@@ -143,7 +143,7 @@ router.delete("/eliminar", async (req, res) => {
   }
 });
 
-// http://localhost:3030/documentos/reembolso
+// http://localhost:3030/documentos/reembolsos
 router.post("/reembolsos", upload.array("archivos"), async (req, res) => {
   const archivos = req.files;
   const { id_usuario_per, id_usuario_seguro_per } = req.body;
