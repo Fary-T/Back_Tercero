@@ -144,31 +144,40 @@ router.delete("/eliminar", async (req, res) => {
 });
 
 // http://localhost:3030/documentos/reembolsos
-router.post("/reembolsos", upload.array("archivos"), async (req, res) => {
-  const archivos = req.files;
+router.post("/reembolsos", upload.any(), async (req, res) => {
+  try {
+  const archivos = req.files || [];
   const { id_usuario_per, id_usuario_seguro_per } = req.body;
+    
+    console.log("Body:", req.body);
+    console.log("Files:", req.files);
 
   if (!id_usuario_per || !id_usuario_seguro_per || archivos.length === 0) {
     return res.status(400).json({ error: "Datos incompletos" });
   }
 
-  try {
     for (const archivo of archivos) {
       const key = `${id_usuario_per}/${id_usuario_seguro_per}/reembolsos/${archivo.originalname}`;
-
       const query = `INSERT INTO reembolso (id_usuario, id_usuario_seguro, doc_reembolso) VALUES (?, ?, ?)`;
       await new Promise((resolve, reject) => {
         db.query(query, [id_usuario_per, id_usuario_seguro_per, key], (err) => {
-          if (err) reject(err);
-          else resolve();
+          if (err){
+            console.error("Error al insertar en BD:", err);
+            return reject(err);
+          }
+         resolve();
         });
       });
 
       await subirArchivo(archivo.path, key);
+      fs.unlink(archivo.path, (err) => {
+        if (err) console.warn("No se pudo eliminar el archivo temporal:", err);
+      });
     }
 
     res.status(200).json({ estado: "OK" });
   } catch (err) {
+    console.error("Error en /reembolsos:", err);
     res.status(500).json({ error: "Error al subir el archivo", detalle: err.message });
   }
 });

@@ -40,6 +40,7 @@ router.get('/:id_usuario', (req, res) => {
 
   const query = `
     SELECT 
+      us.id_usuario_seguro, 
       us.fecha_contrato, 
       us.fecha_fin, 
       u.nombre, 
