@@ -183,7 +183,7 @@ router.post("/reembolsos", upload.any(), async (req, res) => {
 });
 
 // http://localhost:3030/documentos/comprobante
-router.post("/comprobante", upload.single("archivo"), async (req, res) => {
+/*router.post("/comprobante", upload.single("archivo"), async (req, res) => {
   const file = req.file;
   const { id_usuario_seguro_per, fecha_pago, id_usuario, precio } = req.body;
 
@@ -225,7 +225,7 @@ router.post("/comprobante", upload.single("archivo"), async (req, res) => {
     console.error("Error en /comprobante:", err);
     res.status(500).json({ error: "Error al subir el comprobante", detalle: err.message });
   }
-});
+});*/
 
 // http://localhost:3030/documentos/comprobante
 router.post("/comprobante", upload.single("archivo"), async (req, res) => {
