@@ -95,27 +95,36 @@ router.get("/lista", async (req, res) => {
 });
 
 // http://localhost:3030/documentos/descargar
+const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+require('dotenv').config();
+
+const s3 = new S3Client({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+});
+
 router.get("/descargar", async (req, res) => {
   const { key } = req.query;
 
   if (!key) {
-    return res
-      .status(400)
-      .json({ error: 'Falta el parámetro "key" en la consulta' });
+    return res.status(400).json({ error: 'Falta el parámetro "key" en la consulta' });
   }
 
   try {
-    const archivoStream = await obtenerUrlArchivo(key); // función que devuelve un stream desde S3
-
-    const nombreArchivo = key.split("/").pop();
-    res.attachment(nombreArchivo);
-
-    // Enviar el archivo al cliente
-    archivoStream.pipe(res);
+    const command = new GetObjectCommand({
+      Bucket: process.env.AWS_BUCKET, // <-- usa AWS_BUCKET igual que en obtenerUrl.js
+      Key: key,
+    });
+    const url = await getSignedUrl(s3, command, { expiresIn: 60 }); // 60 segundos
+    res.json({ url });
   } catch (error) {
-    console.error("Error al descargar archivo:", error);
+    console.error("Error al generar Signed URL:", error);
     res.status(500).json({
-      error: "No se pudo descargar el archivo",
+      error: "No se pudo generar la URL de previsualización",
       detalle: error.message,
     });
   }
